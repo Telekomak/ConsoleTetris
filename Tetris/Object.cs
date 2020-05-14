@@ -13,7 +13,8 @@ namespace Tetris
         public Shape shape;
         public int Rotation { get; private set; }
 
-        public Square[,,] Data;
+        public Square[,] ActualRot;
+        private Square[,,] Data;
 
         public Object(Shape shape)
         {
@@ -22,10 +23,10 @@ namespace Tetris
             Color = (short)r.Next(0, 16);
             this.shape = shape;
             Data = LoadObject();
-            WriteShape(Rotate(0));
+            Rotate(0);
         }
 
-        public Square[,] Rotate(int direction)
+        public void Rotate(int direction)
         { 
             Rotation = direction;
 
@@ -39,7 +40,7 @@ namespace Tetris
                 }
             }
 
-            return retData;
+            ActualRot = retData;
         }
 
         private Square[,,] LoadObject()
@@ -55,7 +56,7 @@ namespace Tetris
                     char[] temp = raw[line].ToCharArray();
                     for (int k = 0; k < 4; k++)
                     {
-                        data[i, j, k] = new Square(temp[k].ToString(), ConsoleColor.Cyan);
+                        data[i, j, k] = new Square(temp[k], ConsoleColor.Cyan);
                     }
 
                     line++;
@@ -67,8 +68,9 @@ namespace Tetris
             return data;
         }
 
-        public void WriteShape(Square[,] s)
+        public void WriteShape()
         {
+            Square[,] s = ActualRot;
             Console.ForegroundColor = s[0, 0].color;
 
             for (int i = 0; i < 4; i++)
