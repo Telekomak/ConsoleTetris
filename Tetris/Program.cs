@@ -8,10 +8,8 @@ namespace Tetris
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.SetCursorPosition(100,10);
-            Object o = new Object(Object.Shape.LShape);
-            o.Rotate(3);
+            Object o = new Object(Object.Shape.ZShape);
+            o.Rotate(1);
             //int rot = 0;
 
             //while (true)
@@ -22,11 +20,33 @@ namespace Tetris
             //}
 
             Game g = new Game();
-            g.WriteField();
-            Console.Clear();
-            g.WriteToField(o, new int[]{0,6});
-            Console.ReadKey();
+            g.Player = o;
             
+            
+            Stopwatch s = new Stopwatch();
+            g.WriteToField(o, g.Player.Position);
+            g.Move(2);
+            g.Player.Rotate(2);
+            
+            while (true)
+            {
+                
+                Console.SetCursorPosition(10, 10);
+                g.WriteField();
+                g.Move(0);
+
+                if (g.Player.Position[0] == 13)
+                {
+                    g.Player = new Object(Object.Shape.Tee);
+                    continue;
+                }
+
+                System.Threading.Thread.Sleep(400);
+                //Console.SetCursorPosition(5, 10);
+                //g.CleanSprite(g.Player.Position);
+                //g.WriteField();
+            }
+            Console.ReadKey();
         }
     }
 }

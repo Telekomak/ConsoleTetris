@@ -6,39 +6,42 @@ namespace Tetris
 {
     class Square
     {
-        public short Color { get; private set; }
+        public ConsoleColor Color { get; set; }
 
         public Attribute attribute;
-        public ConsoleColor color { get; private set; }
 
-        public char character;
+        public string Character;
 
         public Square(char character, ConsoleColor color)
         {
             attribute = Attribute.NonSticky;
-            this.character = ConstructChar(character);
-            this.color = color;
+            this.Character = ConstructChar(character);
         }
 
         public Square(char character, ConsoleColor color, Attribute a)
         {
             attribute = a;
-            this.character = ConstructChar(character);
-            this.color = color;
+            Character = ConstructChar(character);
+            Color = color;
         }
 
-        private char ConstructChar(char ch)
+        public Square(string character, ConsoleColor color)
         {
-            char retData;
+            Character = character;
+            Color = color;
+        }
+        private string ConstructChar(char ch)
+        {
+            string retData;
 
             if (ch == '1')
             {
-                retData = '█';
+                retData = "██";
             }
 
             else
             {
-                retData = ' ';
+                retData = "  ";
             }
 
             return retData;
