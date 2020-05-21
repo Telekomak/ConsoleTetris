@@ -48,6 +48,9 @@ namespace Tetris
                 case 2:
                     Player.Position[1]--;
                     break;
+
+                default:
+                    break;
             }
 
             WriteToField(Player, Player.Position);
@@ -79,7 +82,6 @@ namespace Tetris
 
         public void WriteToField(Object o, int[] pos)
         {
-            //ActField = Field;
             for (int i = pos[0]; i < pos[0] + 4; i++)
             {
                 for (int j = pos[1]; j < pos[1] + 4; j++)
@@ -89,20 +91,24 @@ namespace Tetris
                         ActField[pos[0] - 1, j] = new Square("  ", ConsoleColor.DarkGray);
                     }
 
-                    ActField[i,j] = o.ActualRot[i - pos[0],j- pos[1]];
+                    if (!(Field[i, j].Character == "██" && o.ActualRot[i - pos[0], j - pos[1]].Character == "  "))
+                    {
+                        ActField[i, j] = o.ActualRot[i - pos[0], j - pos[1]];
+                    }
+
+                    else if ((Field[i, j].Character == "██" && Field[i, j].attribute == Square.Attribute.InObject) && o.ActualRot[i - pos[0], j - pos[1]].attribute == Square.Attribute.InObject)
+                    {
+                        ActField[i, j] = o.ActualRot[i - pos[0], j - pos[1]];
+                    }
+
+                    
                 }
             }
         }
 
-        public void CleanSprite(int[] pos)
+        public void PriorityWriting()
         {
-            for (int i = 0; i < 16; i++)
-            {
-                for (int j = 2; j < 12; j++)
-                {
-                    ActField[i, j] = new Square("  ", ConsoleColor.DarkGray);
-                }
-            }
+
         }
     }
 }

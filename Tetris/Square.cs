@@ -50,7 +50,8 @@ namespace Tetris
         public enum Attribute
         {
             Sticky = 0,
-            NonSticky = 1
+            NonSticky = 1,
+            InObject = 2
         }
 
     }

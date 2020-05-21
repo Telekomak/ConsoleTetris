@@ -58,7 +58,7 @@ namespace Tetris
                     char[] temp = raw[line].ToCharArray();
                     for (int k = 0; k < 4; k++)
                     {
-                        data[i, j, k] = new Square(temp[k], Color);
+                        data[i, j, k] = new Square(temp[k], Color, Square.Attribute.InObject);
                     }
 
                     line++;
