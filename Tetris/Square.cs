@@ -30,6 +30,13 @@ namespace Tetris
             Character = character;
             Color = color;
         }
+
+        public Square(string character, ConsoleColor color, Attribute a)
+        {
+            attribute = a;
+            Character = character;
+            Color = color;
+        }
         private string ConstructChar(char ch)
         {
             string retData;

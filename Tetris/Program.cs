@@ -1,33 +1,25 @@
 ﻿using System;
+using System.Threading;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Input;
 
 namespace Tetris
 {
     class Program
     {
+        private static Game g = new Game();
+        //static Thread mov = new Thread(new ThreadStart(g.Movement()));
+
         static void Main(string[] args)
         {
             Object o = new Object(Object.Shape.ZShape);
-            o.Rotate(1);
-            //int rot = 0;
-
-            //while (true)
-            //{
-            //    Console.SetCursorPosition(0, 0);
-            //    rot = Int32.Parse(Console.ReadLine());
-            //    o.WriteShape(o.Rotate(rot));
-            //}
-
-            Game g = new Game();
             g.Player = o;
-            
-            
-            Stopwatch s = new Stopwatch();
+            //mov.Start();
+
             g.WriteToField(o, g.Player.Position);
-            g.Move(2);
-            g.Player.Rotate(2);
-            
+
             while (true)
             {
                 
@@ -41,7 +33,7 @@ namespace Tetris
                     continue;
                 }
 
-                System.Threading.Thread.Sleep(400);
+                Thread.Sleep(400);
                 //Console.SetCursorPosition(5, 10);
                 //g.CleanSprite(g.Player.Position);
                 //g.WriteField();
