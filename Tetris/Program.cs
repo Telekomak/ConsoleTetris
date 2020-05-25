@@ -26,10 +26,13 @@ namespace Tetris
 
             while (true)
             {
+                //if (!g.IsWriting)
+                //{
+                //    g.Move(0);
+                //}
                 g.Move(0);
                 Thread.Sleep(300);
             }
-            Console.ReadKey();
         }
 
         public static void Movement()

@@ -13,15 +13,17 @@ namespace Tetris
         public Square[,] Field;
         public Square[,] ActField;
         public Object Player;
-
+        public bool IsWriting;
         public Game()
         {
             Field = LoadField();
             ActField = Field;
+            IsWriting = false;
         }
 
         public void WriteField()
         {
+            IsWriting = true;
             Console.SetCursorPosition(0, 0);
 
             for (int i = 0; i < Field.GetLength(0); i++)
@@ -48,6 +50,7 @@ namespace Tetris
             }
 
             Console.ResetColor();
+            IsWriting = false;
         }
 
         public void Move(int direction)
@@ -141,7 +144,10 @@ namespace Tetris
                 }
             }
 
-            WriteField();
+            if (!IsWriting)
+            {
+                WriteField();
+            }
         }
 
         private void GameOver()
