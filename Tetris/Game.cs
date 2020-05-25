@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Windows.Input;
 
 namespace Tetris
 {
@@ -20,6 +22,8 @@ namespace Tetris
 
         public void WriteField()
         {
+            Console.SetCursorPosition(0, 0);
+
             for (int i = 0; i < Field.GetLength(0); i++)
             {
                 for (int j = 0; j < Field.GetLength(1); j++)
@@ -28,13 +32,13 @@ namespace Tetris
                     if (Field[i,j].attribute == Square.Attribute.InObject)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkRed;
-                        Console.BackgroundColor = ConsoleColor.Red;
+                        //Console.BackgroundColor = ConsoleColor.Red;
                     }
 
                     if (Field[i,j].attribute == Square.Attribute.Sticky)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
-                        Console.BackgroundColor = ConsoleColor.Blue;
+                        //Console.BackgroundColor = ConsoleColor.Blue;
                     }
                     Console.Write(ActField[i,j].Character);
                     Console.ResetColor();
@@ -66,7 +70,7 @@ namespace Tetris
                     break;
             }
 
-            WriteToField(Player, Player.Position);
+            WriteToField(Player,Player.Position);
         }
 
         private Square[,] LoadField()
@@ -83,7 +87,7 @@ namespace Tetris
                 {
                     retData[i,j] = new Square(temp[j], ConsoleColor.DarkGray);
 
-                    if (i == raw.Length-1)
+                    if (i == raw.Length-2)
                     {
                         retData[i, j] = new Square(temp[j], ConsoleColor.DarkGray, Square.Attribute.Sticky);
                     }
@@ -101,7 +105,10 @@ namespace Tetris
                 {
                     if (Player.Position[0] != 0 && i == pos[0])
                     {
-                        ActField[pos[0] - 1, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                        if (!(ActField[pos[0] - 1, j].attribute == Square.Attribute.NonSticky && ActField[pos[0] - 1, j].Character == "██"))
+                        {
+                            ActField[pos[0] - 1, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                        }
                     }
 
                     if (!(Field[i, j].Character == "██" && o.ActualRot[i - pos[0], j - pos[1]].Character == "  "))
@@ -123,72 +130,75 @@ namespace Tetris
                                 o.ActualRot[k, l].attribute = Square.Attribute.Sticky;
                             }
                         }
+
+                        if (Player.Position[0] <= 1)
+                        {
+                            GameOver();
+                        }
+
+                        AbortPlayer();
                     }
                 }
             }
+
+            WriteField();
         }
 
+        private void GameOver()
+        {
+            Console.Clear();
+            Console.WriteLine("GAME OVER");
+            Console.ReadKey();
+        }
+
+        private void AbortPlayer()
+        {
+            Random r = new Random();
+            Object o = new Object(Object.Shape.Line);
+            switch (r.Next(0,7))
+            {
+                case 0:
+                    o = new Object(Object.Shape.Tee);
+                    break;
+
+                case 1:
+                    o = new Object(Object.Shape.JShape);
+                    break;
+
+                case 2:
+                    o = new Object(Object.Shape.ZShape);
+                    break;
+
+                case 3:
+                    o = new Object(Object.Shape.SShape);
+                    break;
+
+                case 4:
+                    o = new Object(Object.Shape.Square);
+                    break;
+
+                case 5:
+                    o = new Object(Object.Shape.Line);
+                    break;
+
+                case 6:
+                    o = new Object(Object.Shape.LShape);
+                    break;
+            }
+
+            Player = o;
+        }
 
         public bool IsSticky(int[] pos)
         {
-            bool ret = false;
-
-            if (Field[pos[0], pos[1]].Character == "██" && Field[pos[0], pos[1]].attribute == Square.Attribute.InObject && Field[pos[0], pos[1] - 1].attribute == Square.Attribute.Sticky && Field[pos[0], pos[1] - 1].Character == "██")
-            {
-                ret = true;
-            }
-
-            if (Field[pos[0], pos[1]].Character == "██" && Field[pos[0], pos[1]].attribute == Square.Attribute.InObject && Field[pos[0], pos[1] + 1].attribute == Square.Attribute.Sticky && Field[pos[0], pos[1] + 1].Character == "██")
-            {
-                ret = true;
-            }
 
             if (Field[pos[0], pos[1]].Character == "██" && Field[pos[0], pos[1]].attribute == Square.Attribute.InObject && Field[pos[0] + 1, pos[1]].attribute == Square.Attribute.Sticky && Field[pos[0] + 1, pos[1]].Character == "██")
             {
-                ret = true;
+                return true;
             }
 
-            return ret;
+            return false;
         }
-        public ThreadStart Movement()
-        {
-            while (true)
-            {
-                switch (Console.ReadKey().Key)
-                {
-                    case ConsoleKey.RightArrow:
-                        Move(1);
-                        break;
 
-                    case ConsoleKey.LeftArrow:
-                        Move(2);
-                        break;
-
-                    case ConsoleKey.UpArrow:
-                        if (Player.Rotation < 3)
-                        {
-                            Player.Rotate(Player.Rotation + 1);
-                        }
-
-                        else
-                        {
-                            Player.Rotate(0);
-                        }
-                        break;
-
-                    case ConsoleKey.DownArrow:
-                        if (Player.Rotation > 0)
-                        {
-                            Player.Rotate(Player.Rotation - 1);
-                        }
-
-                        else
-                        {
-                            Player.Rotate(3);
-                        }
-                        break;
-                }
-            }
-        }
     }
 }

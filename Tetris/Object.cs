@@ -32,6 +32,10 @@ namespace Tetris
         { 
             Rotation = direction;
 
+            if (shape == Shape.Square)
+            {
+                direction = 0;
+            }
             Square[,] retData = new Square[4,4];
 
             for (int i = 0; i < 4; i++)
@@ -60,7 +64,6 @@ namespace Tetris
                     {
                         data[i, j, k] = new Square(temp[k], Color, Square.Attribute.InObject);
                     }
-
                     line++;
                 }
 

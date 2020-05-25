@@ -3,42 +3,84 @@ using System.Threading;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows.Input;
 
 namespace Tetris
 {
     class Program
     {
         private static Game g = new Game();
-        //static Thread mov = new Thread(new ThreadStart(g.Movement()));
+        public static Thread mov = new Thread(new ThreadStart(Movement));
+        public static Thread wrt = new Thread(new ThreadStart(Writer));
 
         static void Main(string[] args)
         {
+            Console.Title = "Shitty Tetris";
+            Console.CursorVisible = false;
             Object o = new Object(Object.Shape.ZShape);
             g.Player = o;
-            //mov.Start();
+
+            mov.Start();
+            //wrt.Start();
 
             g.WriteToField(o, g.Player.Position);
 
             while (true)
             {
-                
-                Console.SetCursorPosition(10, 10);
-                g.WriteField();
                 g.Move(0);
-
-                if (g.Player.Position[0] == 13)
-                {
-                    g.Player = new Object(Object.Shape.Tee);
-                    continue;
-                }
-
-                Thread.Sleep(400);
-                //Console.SetCursorPosition(5, 10);
-                //g.CleanSprite(g.Player.Position);
-                //g.WriteField();
+                Thread.Sleep(300);
             }
             Console.ReadKey();
+        }
+
+        public static void Movement()
+        {
+            do
+            {
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+
+                    switch (key.Key)
+                    {
+                        case ConsoleKey.RightArrow:
+                            g.Move(1);
+                            break;
+
+                        case ConsoleKey.LeftArrow:
+                            g.Move(2);
+                            break;
+
+                        case ConsoleKey.UpArrow:
+                            if (g.Player.Rotation < 3)
+                            {
+                                g.Player.Rotate(g.Player.Rotation + 1);
+                            }
+
+                            else
+                            {
+                                g.Player.Rotate(0);
+                            }
+
+                            g.WriteToField(g.Player, g.Player.Position);
+                            break;
+
+                        case ConsoleKey.DownArrow:
+                            g.Move(0);
+                            break;
+                    }
+                }
+
+            } while (true);
+
+        }
+
+        public static void Writer()
+        {
+            while (true)
+            {
+                g.WriteField();
+                //Thread.Sleep(1);
+            }
         }
     }
 }
