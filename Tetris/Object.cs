@@ -13,6 +13,7 @@ namespace Tetris
         public Shape shape;
 
         public int[] Position;
+        
         public int Rotation { get; private set; }
 
         public Square[,] ActualRot;

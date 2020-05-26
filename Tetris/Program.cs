@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@ namespace Tetris
         private static Game g = new Game();
         public static Thread mov = new Thread(new ThreadStart(Movement));
         public static Thread wrt = new Thread(new ThreadStart(Writer));
+        public static List<long> times = new List<long>();
 
         static void Main(string[] args)
         {
@@ -22,16 +24,16 @@ namespace Tetris
             mov.Start();
             //wrt.Start();
 
-            g.WriteToField(o, g.Player.Position);
-
+            
+            g.WriteToField(o, g.Player.Position, 3);
+            Stopwatch s = new Stopwatch();
             while (true)
             {
-                //if (!g.IsWriting)
-                //{
-                //    g.Move(0);
-                //}
+                s.Start();
                 g.Move(0);
                 Thread.Sleep(300);
+                times.Add(s.ElapsedMilliseconds);
+                s.Reset();
             }
         }
 
@@ -64,7 +66,7 @@ namespace Tetris
                                 g.Player.Rotate(0);
                             }
 
-                            g.WriteToField(g.Player, g.Player.Position);
+                            g.WriteToField(g.Player, g.Player.Position, 3);
                             break;
 
                         case ConsoleKey.DownArrow:

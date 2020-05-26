@@ -73,7 +73,7 @@ namespace Tetris
                     break;
             }
 
-            WriteToField(Player,Player.Position);
+            WriteToField(Player,Player.Position, direction);
         }
 
         private Square[,] LoadField()
@@ -100,17 +100,52 @@ namespace Tetris
             return retData;
         }
 
-        public void WriteToField(Object o, int[] pos)
+        public void WriteToField(Object o, int[] pos, int direction)
         {
             for (int i = pos[0]; i < pos[0] + 4; i++)
             {
                 for (int j = pos[1]; j < pos[1] + 4; j++)
                 {
-                    if (Player.Position[0] != 0 && i == pos[0])
+
+                    //if (j == pos[1])
+                    //{
+                    //    ActField[Player.Position[0], Player.Position[1] - 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                    //}
+
+                    //if (j == pos[1]+3)
+                    //{
+                    //    ActField[Player.Position[0], Player.Position[1] + 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                    //}
+
+                    //if (i == pos[0] && Player.Position[0] != 0)
+                    //{
+                    //    ActField[Player.Position[0] - 1, Player.Position[1]] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                    //}
+
+                    if (direction == 1)
                     {
-                        if (!(ActField[pos[0] - 1, j].attribute == Square.Attribute.NonSticky && ActField[pos[0] - 1, j].Character == "██"))
+                        //maze v levo
+                        if (j == pos[1] && ActField[i, j - 1].attribute == Square.Attribute.InObject)
                         {
-                            ActField[pos[0] - 1, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                            ActField[i, j - 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                        }
+                    }
+
+                    else if (direction == 2)
+                    {
+                        // maze v pravo
+                        if (j == pos[1]+3 && ActField[i, j + 1].attribute == Square.Attribute.InObject)
+                        {
+                            ActField[i, j + 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                        }
+                    }
+
+                    else if (direction == 0)
+                    {
+                        //maze nahore
+                        if (i == pos[0] && pos[0] != 0 && ActField[i - 1, j].attribute == Square.Attribute.InObject)
+                        {
+                            ActField[i - 1, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                         }
                     }
 
@@ -146,15 +181,19 @@ namespace Tetris
 
             if (!IsWriting)
             {
-                WriteField();
+                //WriteField();
             }
         }
 
         private void GameOver()
         {
-            Console.Clear();
-            Console.WriteLine("GAME OVER");
+            for (int i = 0; i < Program.times.Count; i++)
+            {
+                Console.WriteLine(Program.times[i]);
+            }
+
             Console.ReadKey();
+            throw new  NotImplementedException("Game over");
         }
 
         private void AbortPlayer()
@@ -193,6 +232,7 @@ namespace Tetris
             }
 
             Player = o;
+            Thread.Sleep(600);
         }
 
         public bool IsSticky(int[] pos)
@@ -206,5 +246,6 @@ namespace Tetris
             return false;
         }
 
+        
     }
 }
