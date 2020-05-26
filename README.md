@@ -12,5 +12,5 @@
     Contains game cotrol methods and game field
     Has properties: Square[,] Field, Object Player
     Has methods: `Square[,] LoadField`, `void Writefield()`,
-    `void WriteToField()`, `void Move()`, `void GameOver()`, `void AbortPLayer()`, 
-    `bool IsSticky()`
+    `void WriteToField()`, `void Move()`, `void GameOver()`,
+    `void AbortPLayer()`, `bool IsSticky()`
