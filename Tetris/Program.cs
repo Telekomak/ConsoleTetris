@@ -12,7 +12,7 @@ namespace Tetris
         private static Game g = new Game();
         public static Thread mov = new Thread(new ThreadStart(Movement));
         public static Thread wrt = new Thread(new ThreadStart(Writer));
-        public static List<long> times = new List<long>();
+        
 
         static void Main(string[] args)
         {
@@ -32,7 +32,7 @@ namespace Tetris
                 s.Start();
                 g.Move(0);
                 Thread.Sleep(300);
-                times.Add(s.ElapsedMilliseconds);
+                
                 s.Reset();
             }
         }

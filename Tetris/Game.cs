@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -79,14 +80,14 @@ namespace Tetris
         private Square[,] LoadField()
         {
             string[] raw = File.ReadAllLines("Field.txt");
-            Square[,] retData = new Square[raw.Length,14];
+            Square[,] retData = new Square[raw.Length,16];
             
 
             for (int i = 0; i < raw.Length; i++)
             {
                 char[] temp = raw[i].ToCharArray();
 
-                for (int j = 0; j < 14; j++)
+                for (int j = 0; j < 16; j++)
                 {
                     retData[i,j] = new Square(temp[j], ConsoleColor.DarkGray);
 
@@ -100,27 +101,26 @@ namespace Tetris
             return retData;
         }
 
+        public static List<long> times = new List<long>();
         public void WriteToField(Object o, int[] pos, int direction)
         {
+            
             for (int i = pos[0]; i < pos[0] + 4; i++)
             {
                 for (int j = pos[1]; j < pos[1] + 4; j++)
                 {
+                    if ((ActField[i, j].Character == "██" && ActField[i, j].attribute == Square.Attribute.NonSticky) && o.ActualRot[i - pos[0], j - pos[1]].Character == "██")
+                    {
+                        if (direction == 1)
+                        {
+                            Move(2);
+                            return;
+                        }
 
-                    //if (j == pos[1])
-                    //{
-                    //    ActField[Player.Position[0], Player.Position[1] - 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
-                    //}
-
-                    //if (j == pos[1]+3)
-                    //{
-                    //    ActField[Player.Position[0], Player.Position[1] + 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
-                    //}
-
-                    //if (i == pos[0] && Player.Position[0] != 0)
-                    //{
-                    //    ActField[Player.Position[0] - 1, Player.Position[1]] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
-                    //}
+                        Move(1);
+                        return;
+                        
+                    }
 
                     if (direction == 1)
                     {
@@ -161,6 +161,7 @@ namespace Tetris
 
                     if (IsSticky(new[] { i, j }))
                     {
+                        
                         for (int k = 0; k < 4; k++)
                         {
                             for (int l = 0; l < 4; l++)
@@ -168,7 +169,8 @@ namespace Tetris
                                 o.ActualRot[k, l].attribute = Square.Attribute.Sticky;
                             }
                         }
-
+                        
+                        
                         if (Player.Position[0] <= 1)
                         {
                             GameOver();
@@ -181,16 +183,16 @@ namespace Tetris
 
             if (!IsWriting)
             {
-                //WriteField();
+                WriteField();
             }
         }
 
         private void GameOver()
         {
-            for (int i = 0; i < Program.times.Count; i++)
-            {
-                Console.WriteLine(Program.times[i]);
-            }
+            //for (int i = 0; i < times.Count; i++)
+            //{
+            //    Console.WriteLine(times[i]);
+            //}
 
             Console.ReadKey();
             throw new  NotImplementedException("Game over");
