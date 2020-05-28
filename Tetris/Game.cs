@@ -32,13 +32,13 @@ namespace Tetris
                 for (int j = 0; j < Field.GetLength(1); j++)
                 {
 
-                    if (Field[i,j].attribute == Square.Attribute.InObject)
+                    if (ActField[i,j].attribute == Square.Attribute.InObject)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         //Console.BackgroundColor = ConsoleColor.Red;
                     }
 
-                    if (Field[i,j].attribute == Square.Attribute.Sticky)
+                    if (ActField[i,j].attribute == Square.Attribute.Sticky)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
                         //Console.BackgroundColor = ConsoleColor.Blue;
@@ -104,7 +104,7 @@ namespace Tetris
         public static List<long> times = new List<long>();
         public void WriteToField(Object o, int[] pos, int direction)
         {
-            
+            bool atBottom = false;
             for (int i = pos[0]; i < pos[0] + 4; i++)
             {
                 for (int j = pos[1]; j < pos[1] + 4; j++)
@@ -161,24 +161,29 @@ namespace Tetris
 
                     if (IsSticky(new[] { i, j }))
                     {
-                        
-                        for (int k = 0; k < 4; k++)
-                        {
-                            for (int l = 0; l < 4; l++)
-                            {
-                                o.ActualRot[k, l].attribute = Square.Attribute.Sticky;
-                            }
-                        }
-                        
-                        
-                        if (Player.Position[0] <= 1)
-                        {
-                            GameOver();
-                        }
-
-                        AbortPlayer();
+                        atBottom = true;
                     }
                 }
+            }
+
+            if (atBottom)
+            {
+                for (int k = 0; k < 4; k++)
+                {
+                    for (int l = 0; l < 4; l++)
+                    {
+                        o.ActualRot[k, l].attribute = Square.Attribute.Sticky;
+                    }
+                }
+
+
+                if (Player.Position[0] <= 1)
+                {
+                    GameOver();
+                }
+
+                CheckLines(new[] { Player.Position[0], Player.Position[0] + 1, Player.Position[0] + 2, Player.Position[0] + 3 });
+                AbortPlayer();
             }
 
             if (!IsWriting)
@@ -234,7 +239,51 @@ namespace Tetris
             }
 
             Player = o;
-            Thread.Sleep(600);
+        }
+
+        private void CheckLines(int[] lines)
+        {
+            List<int> clearLines = new List<int>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                for (int j = 3; j < 13; j++)
+                {
+                    if (ActField[lines[i], j].Character == "  " || lines[i] == 16)
+                    {
+                        break;
+                    }
+
+                    if (j == 12)
+                    {
+                        clearLines.Add(lines[i]);
+                    }
+                }
+            }
+
+            if (clearLines.Count != 0)
+            {
+                ClearLines(clearLines);
+            }
+        }
+
+        private void ClearLines(List<int> lines)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                for (int j = 3; j < 13; j++)
+                {
+                    ActField[lines[i], j] = null;
+                }
+            }
+
+            for (int i = lines[0] - 1; i >= 0; i--)
+            {
+                for (int j = 3; j < 13; j++)
+                {
+                    ActField[i + lines.Count, j] = ActField[i, j];
+                    ActField[i, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                }
+            }
         }
 
         public bool IsSticky(int[] pos)
