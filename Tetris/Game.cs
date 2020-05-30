@@ -15,11 +15,13 @@ namespace Tetris
         public Square[,] ActField;
         public Object Player;
         public bool IsWriting;
+        public int Score;
         public Game()
         {
             Field = LoadField();
             ActField = Field;
             IsWriting = false;
+            Score = 0;
         }
 
         public void WriteField()
@@ -51,6 +53,7 @@ namespace Tetris
             }
 
             Console.ResetColor();
+            Console.WriteLine(Score);
             IsWriting = false;
         }
 
@@ -74,6 +77,7 @@ namespace Tetris
                     break;
             }
 
+            Score++;
             WriteToField(Player,Player.Position, direction);
         }
 
@@ -101,7 +105,6 @@ namespace Tetris
             return retData;
         }
 
-        public static List<long> times = new List<long>();
         public void WriteToField(Object o, int[] pos, int direction)
         {
             bool atBottom = false;
@@ -268,11 +271,39 @@ namespace Tetris
 
         private void ClearLines(List<int> lines)
         {
+            bool isRetarded = false;
+            Score += 100 * lines.Count;
+
             for (int i = 0; i < lines.Count; i++)
             {
+                if (i < lines.Count - 1 && lines.Count != 1)
+                {
+                    if (lines[i] - lines[i + 1] < -1)
+                    {
+                        isRetarded = true;
+                    }
+                }
+                
                 for (int j = 3; j < 13; j++)
                 {
                     ActField[lines[i], j] = null;
+                }
+            }
+
+            int offset = 0;
+            if (isRetarded)
+            {
+                for (int i = lines[lines.Count-1]; i >= lines[0]; i--)
+                {
+                    if (ActField[i,3] != null)
+                    {
+                        for (int j = 3; j < 12; j++)
+                        {
+                            ActField[lines[lines.Count - 1] - offset, j] = ActField[i, j];
+                            ActField[i,j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                        }
+                        offset++;
+                    }
                 }
             }
 
@@ -280,7 +311,7 @@ namespace Tetris
             {
                 for (int j = 3; j < 13; j++)
                 {
-                    ActField[i + lines.Count, j] = ActField[i, j];
+                    ActField[i + lines.Count + offset, j] = ActField[i, j];
                     ActField[i, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                 }
             }

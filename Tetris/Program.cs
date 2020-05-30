@@ -16,6 +16,8 @@ namespace Tetris
 
         static void Main(string[] args)
         {
+            Console.WindowHeight = 20;
+            Console.WindowWidth = 50;
             Console.Title = "Shitty Tetris";
             Console.CursorVisible = false;
             Object o = new Object(Object.Shape.ZShape);
