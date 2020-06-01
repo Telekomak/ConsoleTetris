@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -48,6 +49,23 @@ namespace Tetris
             }
 
             ActualRot = retData;
+        }
+
+        public string[] GetNext()
+        {
+            string[] kokot = new string[4];
+            string[] retData = new string[4];
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    kokot[j] = ActualRot[i, j].Character;
+                }
+
+                retData[i] = String.Join("", kokot);
+            }
+
+            return retData;
         }
 
         private Square[,,] LoadObject()

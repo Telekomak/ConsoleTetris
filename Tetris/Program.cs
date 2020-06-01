@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text;
+using System.IO;
+using System.Media;
 
 namespace Tetris
 {
@@ -11,23 +10,24 @@ namespace Tetris
     {
         private static Game g = new Game();
         public static Thread mov = new Thread(new ThreadStart(Movement));
-        public static Thread wrt = new Thread(new ThreadStart(Writer));
-        
+        public static Thread music = new Thread(new ThreadStart(Music));
 
         static void Main(string[] args)
         {
-            Console.WindowHeight = 20;
-            Console.WindowWidth = 50;
+            Console.WindowHeight = 25;
+            Console.WindowWidth = 30;
             Console.Title = "Shitty Tetris";
+            //Writer.DrawFrame();
             Console.CursorVisible = false;
-            Object o = new Object(Object.Shape.ZShape);
-            g.Player = o;
+            g.Player = new Object(Object.Shape.ZShape);
+            Game.Next = new Object(Object.Shape.SShape);
 
             mov.Start();
+            music.Start();
             //wrt.Start();
 
             
-            g.WriteToField(o, g.Player.Position, 3);
+            g.WriteToField(g.Player, g.Player.Position, 3);
             Stopwatch s = new Stopwatch();
             while (true)
             {
@@ -81,13 +81,12 @@ namespace Tetris
 
         }
 
-        public static void Writer()
+        static void Music()
         {
-            while (true)
-            {
-                g.WriteField();
-                //Thread.Sleep(1);
-            }
+
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = $@"{Directory.GetCurrentDirectory()}\music.wav";
+            player.PlayLooping();
         }
     }
 }

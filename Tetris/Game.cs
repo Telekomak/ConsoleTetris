@@ -14,20 +14,20 @@ namespace Tetris
         public Square[,] Field;
         public Square[,] ActField;
         public Object Player;
+        public static Object Next;
         public bool IsWriting;
-        public int Score;
+       
         public Game()
         {
             Field = LoadField();
             ActField = Field;
             IsWriting = false;
-            Score = 0;
         }
 
         public void WriteField()
         {
             IsWriting = true;
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(0,0);
 
             for (int i = 0; i < Field.GetLength(0); i++)
             {
@@ -53,7 +53,9 @@ namespace Tetris
             }
 
             Console.ResetColor();
-            Console.WriteLine(Score);
+            //Thread wrt = new Thread(Writer.Write);
+            //wrt.Start();
+            Writer.Write();
             IsWriting = false;
         }
 
@@ -77,7 +79,7 @@ namespace Tetris
                     break;
             }
 
-            Score++;
+            WritingVariables.Score++;
             WriteToField(Player,Player.Position, direction);
         }
 
@@ -203,7 +205,7 @@ namespace Tetris
             //}
 
             Console.ReadKey();
-            throw new  NotImplementedException("Game over");
+             throw new  NotImplementedException("Game over");
         }
 
         private void AbortPlayer()
@@ -241,7 +243,8 @@ namespace Tetris
                     break;
             }
 
-            Player = o;
+            Player = Next;
+            Next = o;
         }
 
         private void CheckLines(int[] lines)
@@ -272,7 +275,8 @@ namespace Tetris
         private void ClearLines(List<int> lines)
         {
             bool isRetarded = false;
-            Score += 100 * lines.Count;
+            WritingVariables.LinesCleared += lines.Count;
+            WritingVariables.Score += 100 * lines.Count;
 
             for (int i = 0; i < lines.Count; i++)
             {
