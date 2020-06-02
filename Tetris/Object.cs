@@ -22,9 +22,8 @@ namespace Tetris
 
         public Object(Shape shape)
         {
-            Random r = new Random();
             Position = new[] {0, 6};
-            Color = ConsoleColor.Red;
+            Color = PickRandomColor();
             this.shape = shape;
             Data = LoadObject();//shape must be defined!
             Rotate(0);
@@ -90,6 +89,33 @@ namespace Tetris
             }
 
             return data;
+        }
+
+        public static ConsoleColor PickRandomColor()
+        {
+            Random r = new Random();
+
+            switch (r.Next(0, 7))
+            {
+                case 1:
+                    return ConsoleColor.DarkBlue;
+
+                case 2:
+                    return ConsoleColor.DarkGreen;
+
+                case 3:
+                    return ConsoleColor.DarkRed;
+
+                case 4:
+                    return ConsoleColor.DarkYellow;
+
+                case 5:
+                    return ConsoleColor.DarkMagenta;
+                case 6:
+                    return ConsoleColor.DarkGray;
+            }
+
+            return ConsoleColor.DarkRed;
         }
 
         public void WriteShape()

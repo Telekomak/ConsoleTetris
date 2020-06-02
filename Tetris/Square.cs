@@ -16,6 +16,7 @@ namespace Tetris
         {
             attribute = Attribute.NonSticky;
             this.Character = ConstructChar(character);
+            Color = color;
         }
 
         public Square(char character, ConsoleColor color, Attribute a)

@@ -33,18 +33,7 @@ namespace Tetris
             {
                 for (int j = 0; j < Field.GetLength(1); j++)
                 {
-
-                    if (ActField[i,j].attribute == Square.Attribute.InObject)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        //Console.BackgroundColor = ConsoleColor.Red;
-                    }
-
-                    if (ActField[i,j].attribute == Square.Attribute.Sticky)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkBlue;
-                        //Console.BackgroundColor = ConsoleColor.Blue;
-                    }
+                    Console.ForegroundColor = Field[i, j].Color;
                     Console.Write(ActField[i,j].Character);
                     Console.ResetColor();
                 }
@@ -53,8 +42,6 @@ namespace Tetris
             }
 
             Console.ResetColor();
-            //Thread wrt = new Thread(Writer.Write);
-            //wrt.Start();
             Writer.Write();
             IsWriting = false;
         }
@@ -199,13 +186,8 @@ namespace Tetris
 
         private void GameOver()
         {
-            //for (int i = 0; i < times.Count; i++)
-            //{
-            //    Console.WriteLine(times[i]);
-            //}
-
-            Console.ReadKey();
-             throw new  NotImplementedException("Game over");
+            Program.Loop = false;
+            Program.mov.Join();
         }
 
         private void AbortPlayer()

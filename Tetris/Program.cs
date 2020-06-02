@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Diagnostics;
 using System.IO;
 using System.Media;
 
@@ -8,35 +7,43 @@ namespace Tetris
 {
     class Program
     {
-        private static Game g = new Game();
+        private static Game g;
         public static Thread mov = new Thread(new ThreadStart(Movement));
         public static Thread music = new Thread(new ThreadStart(Music));
+        public static bool Loop;
 
         static void Main(string[] args)
         {
-            Console.WindowHeight = 25;
-            Console.WindowWidth = 30;
+            music.Start();
+            GameLoop();
+        }
+
+        public static void GameLoop()
+        {
+            Loop = true;
+
+            Console.WindowHeight = 24;
+            Console.WindowWidth = 31;
             Console.Title = "Shitty Tetris";
-            //Writer.DrawFrame();
             Console.CursorVisible = false;
+
+            g = new Game();
+
             g.Player = new Object(Object.Shape.ZShape);
             Game.Next = new Object(Object.Shape.SShape);
 
             mov.Start();
-            music.Start();
-            //wrt.Start();
-
             
+
             g.WriteToField(g.Player, g.Player.Position, 3);
-            Stopwatch s = new Stopwatch();
-            while (true)
+            while (Loop)
             {
-                s.Start();
                 g.Move(0);
                 Thread.Sleep(300);
-                
-                s.Reset();
+
             }
+            Console.Clear();
+            Writer.GameOver();
         }
 
         public static void Movement()
@@ -77,13 +84,13 @@ namespace Tetris
                     }
                 }
 
-            } while (true);
+            } while (Loop);
 
+            return;
         }
 
         static void Music()
         {
-
             SoundPlayer player = new SoundPlayer();
             player.SoundLocation = $@"{Directory.GetCurrentDirectory()}\music.wav";
             player.PlayLooping();
