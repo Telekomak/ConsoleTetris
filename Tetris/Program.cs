@@ -18,11 +18,12 @@ namespace Tetris
             GameLoop();
         }
 
+        //Sets the shit up and moves player down
         public static void GameLoop()
         {
             Loop = true;
 
-            Console.WindowHeight = 24;
+            Console.WindowHeight = 25;
             Console.WindowWidth = 31;
             Console.Title = "Shitty Tetris";
             Console.CursorVisible = false;
@@ -46,6 +47,7 @@ namespace Tetris
             Writer.GameOver();
         }
 
+        //Manages left to right movement an rotation
         public static void Movement()
         {
             do
@@ -88,7 +90,7 @@ namespace Tetris
 
             return;
         }
-
+        //Plays music you fkin 4head 
         static void Music()
         {
             SoundPlayer player = new SoundPlayer();

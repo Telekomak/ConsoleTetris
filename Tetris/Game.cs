@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Windows.Input;
 
 namespace Tetris
 {
     class Game
     {
         public Square[,] Field;
-        public Square[,] ActField;
         public Object Player;
         public static Object Next;
         public bool IsWriting;
@@ -20,11 +14,11 @@ namespace Tetris
         public Game()
         {
             Field = LoadField();
-            ActField = Field;
             IsWriting = false;
         }
 
-        public void WriteField()
+        //Writes game field to console
+        public void WriteField() 
         {
             IsWriting = true;
             Console.SetCursorPosition(0,0);
@@ -34,7 +28,7 @@ namespace Tetris
                 for (int j = 0; j < Field.GetLength(1); j++)
                 {
                     Console.ForegroundColor = Field[i, j].Color;
-                    Console.Write(ActField[i,j].Character);
+                    Console.Write(Field[i,j].Character);
                     Console.ResetColor();
                 }
 
@@ -44,8 +38,9 @@ namespace Tetris
             Console.ResetColor();
             Writer.Write();
             IsWriting = false;
-        }
+        } 
 
+        //Changes player's position 
         public void Move(int direction)
         {
             switch (direction)
@@ -70,6 +65,7 @@ namespace Tetris
             WriteToField(Player,Player.Position, direction);
         }
 
+        //Loads empty field from file
         private Square[,] LoadField()
         {
             string[] raw = File.ReadAllLines("Field.txt");
@@ -94,6 +90,7 @@ namespace Tetris
             return retData;
         }
 
+        //Most important: writes player to the field and manages colisions
         public void WriteToField(Object o, int[] pos, int direction)
         {
             bool atBottom = false;
@@ -101,7 +98,7 @@ namespace Tetris
             {
                 for (int j = pos[1]; j < pos[1] + 4; j++)
                 {
-                    if ((ActField[i, j].Character == "██" && ActField[i, j].attribute == Square.Attribute.NonSticky) && o.ActualRot[i - pos[0], j - pos[1]].Character == "██")
+                    if ((Field[i, j].Character == "██" && Field[i, j].attribute == Square.Attribute.NonSticky) && o.ActualRot[i - pos[0], j - pos[1]].Character == "██")
                     {
                         if (direction == 1)
                         {
@@ -117,38 +114,38 @@ namespace Tetris
                     if (direction == 1)
                     {
                         //maze v levo
-                        if (j == pos[1] && ActField[i, j - 1].attribute == Square.Attribute.InObject)
+                        if (j == pos[1] && Field[i, j - 1].attribute == Square.Attribute.InObject)
                         {
-                            ActField[i, j - 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                            Field[i, j - 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                         }
                     }
 
                     else if (direction == 2)
                     {
                         // maze v pravo
-                        if (j == pos[1]+3 && ActField[i, j + 1].attribute == Square.Attribute.InObject)
+                        if (j == pos[1]+3 && Field[i, j + 1].attribute == Square.Attribute.InObject)
                         {
-                            ActField[i, j + 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                            Field[i, j + 1] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                         }
                     }
 
                     else if (direction == 0)
                     {
                         //maze nahore
-                        if (i == pos[0] && pos[0] != 0 && ActField[i - 1, j].attribute == Square.Attribute.InObject)
+                        if (i == pos[0] && pos[0] != 0 && Field[i - 1, j].attribute == Square.Attribute.InObject)
                         {
-                            ActField[i - 1, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                            Field[i - 1, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                         }
                     }
 
                     if (!(Field[i, j].Character == "██" && o.ActualRot[i - pos[0], j - pos[1]].Character == "  "))
                     {
-                        ActField[i, j] = o.ActualRot[i - pos[0], j - pos[1]];
+                        Field[i, j] = o.ActualRot[i - pos[0], j - pos[1]];
                     }
 
                     if ((Field[i, j].Character == "██" && Field[i, j].attribute == Square.Attribute.InObject) && o.ActualRot[i - pos[0], j - pos[1]].attribute == Square.Attribute.InObject)
                     {
-                        ActField[i, j] = o.ActualRot[i - pos[0], j - pos[1]];
+                        Field[i, j] = o.ActualRot[i - pos[0], j - pos[1]];
                     }
 
                     if (IsSticky(new[] { i, j }))
@@ -184,12 +181,14 @@ namespace Tetris
             }
         }
 
+        //Called when player reaches the top of the field
         private void GameOver()
         {
             Program.Loop = false;
             Program.mov.Join();
         }
 
+        //Sets new player and next block
         private void AbortPlayer()
         {
             Random r = new Random();
@@ -229,6 +228,7 @@ namespace Tetris
             Next = o;
         }
 
+        //Checks, if there's any complete lines
         private void CheckLines(int[] lines)
         {
             List<int> clearLines = new List<int>();
@@ -236,7 +236,7 @@ namespace Tetris
             {
                 for (int j = 3; j < 13; j++)
                 {
-                    if (ActField[lines[i], j].Character == "  " || lines[i] == 16)
+                    if (Field[lines[i], j].Character == "  " || lines[i] == 16)
                     {
                         break;
                     }
@@ -254,6 +254,7 @@ namespace Tetris
             }
         }
 
+        //Called from CheckLines() - Deletes complete lines
         private void ClearLines(List<int> lines)
         {
             bool isRetarded = false;
@@ -272,7 +273,7 @@ namespace Tetris
                 
                 for (int j = 3; j < 13; j++)
                 {
-                    ActField[lines[i], j] = null;
+                    Field[lines[i], j] = null;
                 }
             }
 
@@ -281,12 +282,12 @@ namespace Tetris
             {
                 for (int i = lines[lines.Count-1]; i >= lines[0]; i--)
                 {
-                    if (ActField[i,3] != null)
+                    if (Field[i,3] != null)
                     {
                         for (int j = 3; j < 12; j++)
                         {
-                            ActField[lines[lines.Count - 1] - offset, j] = ActField[i, j];
-                            ActField[i,j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                            Field[lines[lines.Count - 1] - offset, j] = Field[i, j];
+                            Field[i,j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                         }
                         offset++;
                     }
@@ -297,12 +298,13 @@ namespace Tetris
             {
                 for (int j = 3; j < 13; j++)
                 {
-                    ActField[i + lines.Count + offset, j] = ActField[i, j];
-                    ActField[i, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
+                    Field[i + lines.Count + offset, j] = Field[i, j];
+                    Field[i, j] = new Square("  ", ConsoleColor.DarkGray, Square.Attribute.NonSticky);
                 }
             }
         }
 
+        //Checks if the player is touching any Square with attribute Sticky
         public bool IsSticky(int[] pos)
         {
 

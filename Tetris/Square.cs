@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tetris
 {
@@ -26,18 +24,13 @@ namespace Tetris
             Color = color;
         }
 
-        public Square(string character, ConsoleColor color)
-        {
-            Character = character;
-            Color = color;
-        }
-
         public Square(string character, ConsoleColor color, Attribute a)
         {
             attribute = a;
             Character = character;
             Color = color;
         }
+        //Picks the character based on char it gets (1 or 0)
         private string ConstructChar(char ch)
         {
             string retData;

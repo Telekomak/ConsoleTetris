@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Tetris
 {
@@ -12,6 +10,7 @@ namespace Tetris
             Value = ConstructValue();
         }
 
+        //Makes the value always 4 digits long
         private string ConstructValue()
         {
             string raw = Convert.ToString(WritingVariables.LinesCleared);

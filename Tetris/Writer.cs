@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
 namespace Tetris
@@ -12,6 +9,7 @@ namespace Tetris
         private static IUIElement[] elements;
         public static void Write()
         {
+            Console.SetCursorPosition(0,19);
             elements = new IUIElement[] {new LinesClrdElement(), new ScoreElement(), new NextBlockElement()};
 
             for (int i = 0; i < 5; i++)
