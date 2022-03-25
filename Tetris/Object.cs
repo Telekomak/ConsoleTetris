@@ -123,7 +123,7 @@ namespace Tetris
                 for (int j = 0; j < 4; j++)
                 {
                     Console.Write(s[i,j].Character);
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(100);
                 }
 
                 Console.WriteLine();

@@ -90,7 +90,7 @@ namespace Tetris
 
             return;
         }
-        //Plays music you fkin 4head 
+        //Plays music 4head 
         static void Music()
         {
             SoundPlayer player = new SoundPlayer();
