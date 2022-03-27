@@ -59,7 +59,7 @@ namespace Tetris
 
         private static Square[,] Load()
         {
-            string[] raw = File.ReadAllLines("GameOver.txt");
+            string[] raw = Properties.Resources.GameOver.Split('\n');
             Square[,] retData = new Square[raw.Length, 22];
 
             for (int i = 0; i < raw.Length; i++)

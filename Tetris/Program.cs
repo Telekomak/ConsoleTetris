@@ -94,7 +94,7 @@ namespace Tetris
         static void Music()
         {
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = $@"{Directory.GetCurrentDirectory()}\music.wav";
+            player.Stream = Properties.Resources.Music;
             player.PlayLooping();
         }
     }

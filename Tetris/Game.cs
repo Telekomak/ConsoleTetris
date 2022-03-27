@@ -68,7 +68,7 @@ namespace Tetris
         //Loads empty field from file
         private Square[,] LoadField()
         {
-            string[] raw = File.ReadAllLines("Field.txt");
+            string[] raw = Properties.Resources.Field.Split('\n');
             Square[,] retData = new Square[raw.Length,16];
             
 

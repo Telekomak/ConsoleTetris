@@ -64,7 +64,35 @@ namespace Tetris
 
         private Square[,,] LoadObject()
         {
-            string[] raw = File.ReadAllLines($@"Shapes\{shape.ToString().ToLower()}");
+            string[] raw;
+
+            switch (shape)
+            {
+                case Shape.Line:
+                    raw = Properties.Resources.Line.Split('\n');
+                    break;
+                case Shape.Square:
+                    raw = Properties.Resources.Square.Split('\n');
+                    break;
+                case Shape.LShape:
+                    raw = Properties.Resources.LShape.Split('\n');
+                    break;
+                case Shape.JShape:
+                    raw = Properties.Resources.JShape.Split('\n');
+                    break;
+                case Shape.Tee:
+                    raw = Properties.Resources.Tee.Split('\n');
+                    break;
+                case Shape.ZShape:
+                    raw = Properties.Resources.ZShape.Split('\n');
+                    break;
+                case Shape.SShape:
+                    raw = Properties.Resources.SShape.Split('\n');
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             Square[, ,] data = new Square[4,4,4];
             int line = 0;
 
